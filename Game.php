@@ -62,16 +62,16 @@ class Game{
     }
 
     private function round(){
-        $herosGuess = Utils::generateRandomNumber(0,1); //permet de simplifier le fait de deviner pair ou impair. 
+        $herosGuess = Utils::generateRandomNumber(0,1); //permet de simplifier le fait de deviner pair ou impair. Si le nombre généré est 0, le choix du héro est considéré comme pair ; s'il s'agit de 1, il est alors impair
         $cheat = Utils::generateRandomNumber(0,1); //selon si 1 ou 0 est sélectionné, cela définit le fait de tricher ou pas. 
 
-        if ($this->enemies[$this->randomEnemy]->getAge() >= 70 && $cheat == 1){ //cet endroit permet de jouer le bonus. Si la variable cheat 
+        if ($this->enemies[$this->randomEnemy]->getAge() >= 70 && $cheat == 1){ //cet endroit permet de jouer le bonus. Si l'ennemi à 70ans ou plus, et la variable cheat est égale à 1, on admet qu'il accepte de tricher ; si la variable cheat est à 0, il s'agit du scénario i=où il décide de ne pas tricher. Si l'ennemi n'a pas 70 ans, alors le héros n'a pas la possibilité de tricher
             echo $this->hero->getName() . " triche discrètement et donc gagne ainsi la manche. Il remporte les " . $this->enemies[$this->randomEnemy]->getNbMarbles() . " billes de " . $this->enemies[$this->randomEnemy]->getName() . " et en a donc au total " . $this->hero->getNbMarbles() . ".<br><br>";
-        } else if ($herosGuess == $this->enemies[$this->randomEnemy]->getNbMarbles() % 2) {
+        } else if ($herosGuess == $this->enemies[$this->randomEnemy]->getNbMarbles() % 2) { // %2 renvoie 1 si le nombre de billes de l'ennemi est impair, et 0 si ce nombre est pair. Le résultat obtenu est alors comparé au choix du héro. On a 4 scénarios possibles. Cette boucle gère les deux scénarios suivants : 0 et 0, où le héro devine pair et le nombre de billes de l'ennemi est pair, et  1 et 1, où le héro devine impair et le nombre de billes de l'ennemi est impair
             echo $this->hero->getName() . " devine correctement et donc gagne la manche. " . $this->enemies[$this->randomEnemy]->getName() . " avait " . $this->enemies[$this->randomEnemy]->getNbMarbles() . " billes. ". "Il remporte " . ($this->enemies[$this->randomEnemy]->getNbMarbles() + $this->hero->getGain()) . " billes. ";
             $this->hero->setNbMarbles($this->hero->getNbMarbles() + $this->hero->getGain() + $this->enemies[$this->randomEnemy]->getNbMarbles());
             echo "Il en a maintenant " . $this->hero->getNbMarbles() . ".<br><br>";        
-        } else {
+        } else { // gère les 2 autres scénarios restants, c'est à dire : 1 et 0, où le héro dit que le nombre de billes de l'ennemi est impair alors qu'il est pair, et 0 et 1 où le héro dit que le nombre de billes de l'ennemi est pair alors qu'il est impair
             $this->hero->setNbMarbles($this->hero->getNbMarbles()-($this->enemies[$this->randomEnemy]->getNbMarbles() + $this->hero->getLoss()));
             echo $this->hero->getName() . " se trompe et donc perd la manche. " . $this->enemies[$this->randomEnemy]->getName() . " avait " . $this->enemies[$this->randomEnemy]->getNbMarbles() . " billes. Il perd au total " . ($this->enemies[$this->randomEnemy]->getNbMarbles() + $this->hero->getLoss()) . " billes.";
             if ($this->hero->getNbMarbles() > 0){
